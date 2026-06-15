@@ -162,6 +162,10 @@ LibConfig.FormKCM {
 		minimumValue: 0
 		maximumValue: config.cellBoxUnits/2
 	}
+	LibConfig.CheckBox {
+		text: i18n("Use smaller tile icons")
+		configKey: 'smallTileIcons'
+	}
 
 	LibConfig.RadioButtonGroup {
 		id: tilesThemeGroup
