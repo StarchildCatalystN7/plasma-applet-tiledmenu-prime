@@ -17,9 +17,9 @@ Rectangle {
 	gradient: appObj.backgroundGradient ? tileGradient.createObject(tileItemView) : null
 
 	readonly property int tilePadding: 4 * config.scaleFactor
-	readonly property int smallIconSize: 32 * config.scaleFactor
-	readonly property int mediumIconSize: 72 * config.scaleFactor
-	readonly property int largeIconSize: 96 * config.scaleFactor
+	readonly property int smallIconSize: config.smallTileIcons ? 24 : 32 * config.scaleFactor
+	readonly property int mediumIconSize: config.smallTileIcons ? 48 : 72 * config.scaleFactor
+	readonly property int largeIconSize: config.smallTileIcons ? 72 : 96 * config.scaleFactor
 
 	readonly property int labelAlignment: appObj.isGroup ? config.groupLabelAlignment : config.tileLabelAlignment
 
@@ -62,6 +62,8 @@ Rectangle {
 		source: appObj.backgroundImage
 		fillMode: Image.PreserveAspectCrop
 		asynchronous: true
+		smooth: true
+		mipmap: true
 	}
 
 	Kirigami.Icon {
@@ -75,7 +77,7 @@ Rectangle {
 		width: appObj.showIcon ? size : 0
 		height: appObj.showIcon ? size : 0
 		anchors.fill: appObj.iconFill ? parent : null
-		smooth: appObj.iconFill
+		smooth: appObj.iconFill || config.smallTileIcons
 	}
 
 	PlasmaComponents3.Label {

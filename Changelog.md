@@ -1,3 +1,8 @@
+## v1.0.2 - June 15 2026
+
+* Add configuration control allow Tiles to use a smaller icon.
+* Make Background Images use antialising (issue #2)
+
 ## v1.0.1 - May 16 2026
 
 * Add configuration control to hide Power and User entries on the Sidebar (issue #4)

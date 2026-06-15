@@ -48,6 +48,7 @@ Item {
 	readonly property real cellMargin: cellMarginUnits * tileScale * scaleFactor
 	readonly property real cellPushedMargin: cellMargin * 2
 	readonly property int cellBoxSize: cellMargin + cellSize + cellMargin
+	readonly property bool smallTileIcons: plasmoid.configuration.smallTileIcons
 	readonly property int tileGridWidth: plasmoid.configuration.favGridCols * cellBoxSize
 
 	readonly property int favCellWidth: 60 * scaleFactor
