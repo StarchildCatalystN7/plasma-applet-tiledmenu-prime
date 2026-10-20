@@ -25,14 +25,18 @@ Rectangle {
 
 	property bool hovered: false
 
+	// State conditions read appObj (QML properties) instead of modelData
+	// (plain JS object): Qt >= 6.10 (Plasma 6.8) no longer tracks JS-object
+	// property changes in bindings, so only QML-property dependencies update
+	// after a tile is resized (see AppObject.updateFromTile).
 	states: [
 		State {
-			when: modelData.w == 1 && modelData.h >= 1
+			when: appObj.tileW == 1 && appObj.tileH >= 1
 			PropertyChanges { target: icon; size: smallIconSize }
 			PropertyChanges { target: label; visible: false }
 		},
 		State {
-			when: modelData.w >= 2 && modelData.h == 1
+			when: appObj.tileW >= 2 && appObj.tileH == 1
 			AnchorChanges { target: icon
 				anchors.horizontalCenter: undefined
 				anchors.left: tileItemView.left
@@ -46,11 +50,11 @@ Rectangle {
 			}
 		},
 		State {
-			when: (modelData.w >= 2 && modelData.h == 2) || (modelData.w == 2 && modelData.h >= 2)
+			when: (appObj.tileW >= 2 && appObj.tileH == 2) || (appObj.tileW == 2 && appObj.tileH >= 2)
 			PropertyChanges { target: icon; size: mediumIconSize }
 		},
 		State {
-			when: modelData.w >= 3 && modelData.h >= 3
+			when: appObj.tileW >= 3 && appObj.tileH >= 3
 			PropertyChanges { target: icon; size: largeIconSize }
 		}
 	]

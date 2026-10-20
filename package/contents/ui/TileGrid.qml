@@ -576,10 +576,30 @@ DropArea {
 		}
 		appsModel.tileGridModel.favorites = urlList
 		updateSize()
+		noTiles = (tileModel.length == 0)
+		refreshTileViews()
+	}
+
+	// Qt >= 6.10 (Plasma 6.8) no longer tracks property changes made on plain
+	// JavaScript objects inside QML bindings. When a tile is edited (size,
+	// position, label, icon, background) the view has to be re-evaluated
+	// manually, otherwise the changes never appear on screen.
+	function refreshTileViews() {
+		for (var i = 0; i < tileModelRepeater.count; i++) {
+			var it = tileModelRepeater.itemAt(i)
+			if (it && it.appObj) {
+				it.appObj.updateFromTile()
+			}
+		}
 	}
 	onDraggedItemChanged: update()
 	onTileModelChanged: update()
 	property var tileModel: []
+
+	// `tileModel` is a plain JS array, and Qt >= 6.10 (Plasma 6.8) doesn't
+	// track its length in bindings. Update this property imperatively after
+	// every change so the "no tiles" splash state stays correct.
+	property bool noTiles: tileModel.length == 0
 
 	function tryPushGroup(tileXPos, tileYPos, avoidX, avoidY, avoidW, avoidH) {
 		return tryPushTile(tileXPos, tileYPos, avoidX, avoidY, avoidW, avoidH, true)
@@ -995,7 +1015,9 @@ DropArea {
 						visible: !plasmoid.configuration.tilesLocked
 						onClicked: {
 							var tile = tileGrid.addGroup(cellContextMenu.cellX, cellContextMenu.cellY)
-							tileGrid.editTile(tile)
+							if (tile) {
+								tileGrid.editTile(tileModel.indexOf(tile))
+							}
 						}
 					}
 
@@ -1029,7 +1051,7 @@ DropArea {
 	Loader {
 		id: tileGridSplashLoader
 		anchors.centerIn: parent
-		active: tileModel.length == 0 && !tileGrid.editing
+		active: tileGrid.noTiles && !tileGrid.editing
 		visible: active && width <= parent.width
 		source: "TileGridSplash.qml"
 		property alias tileGridPresets: tileGridPresets
@@ -1129,7 +1151,8 @@ DropArea {
 		var removedCount = 0
 		for (var i = tileModel.length - 1; i >= 0; i--) {
 			var tile = tileModel[i]
-			if (tile.url == url) {
+			// Plasma 6.8 Kicker favorite ids carry an "applications:" prefix; normalize both sides.
+			if (Utils.normAppId(tile.url) === Utils.normAppId(url)) {
 				removedCount += 1
 				tileModel.splice(i, 1) // remove 1 item at index
 			}
@@ -1183,7 +1206,8 @@ DropArea {
 	function hasAppTile(url) {
 		for (var i = 0; i < tileModel.length; i++) {
 			var tile = tileModel[i]
-			if (tile.url == url) {
+			// Plasma 6.8 Kicker favorite ids carry an "applications:" prefix; normalize both sides.
+			if (Utils.normAppId(tile.url) === Utils.normAppId(url)) {
 				return true
 			}
 		}
@@ -1233,5 +1257,8 @@ DropArea {
 		tileGridPresets.addDefault()
 	}
 
-	signal editTile(var tile)
+	// Qt >= 6.10 (Plasma 6.8) deep-copies object-typed signal arguments through
+	// QVariant, so this carries the tile's *index* (a value type) instead of the
+	// tile object. The editor resolves the real `tileModel[index]` element itself.
+	signal editTile(int tileIndex)
 }

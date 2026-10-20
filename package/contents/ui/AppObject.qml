@@ -36,6 +36,17 @@ QtObject {
 	// onTileChanged: console.log('onTileChanged', JSON.stringify(tile))
 	// onAppLabelChanged: console.log('onAppLabelChanged', appLabel)
 
+	// Qt >= 6.10 (Plasma 6.8) no longer tracks property changes made on plain
+	// JavaScript objects inside QML bindings, so after the tile editor mutates
+	// a tile (w/h/x/y, label, icon, background, ...), bindings that read those
+	// values don't re-evaluate on their own. Manually re-emit this object's
+	// `tile` changed signal so every dependent binding re-reads the tile.
+	function updateFromTile() {
+		if (tile) {
+			tileChanged()
+		}
+	}
+
 	function hasActionList() {
 		return app ? appsModel.tileGridModel.indexHasActionList(app.indexInModel) : false
 	}

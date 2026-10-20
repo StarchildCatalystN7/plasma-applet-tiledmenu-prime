@@ -1,5 +1,19 @@
 .pragma library
 
+// Since Plasma 6.8, Kicker favorite ids carry an "applications:" scheme
+// (e.g. "applications:steam.desktop"). Older versions / this applet's saved
+// tiles use the bare id (e.g. "steam.desktop"). Normalize both to the bare
+// id so they are comparable regardless of which form is present.
+function normAppId(id) {
+	if (typeof id !== 'string') {
+		return id
+	}
+	if (id.indexOf('applications:') === 0) {
+		id = id.substr('applications:'.length)
+	}
+	return id
+}
+
 function parseDropUrl(url) {
 	var startsWithAppsScheme = url.indexOf('applications:') === 0 // Search Results add this prefix
 	if (startsWithAppsScheme) {
