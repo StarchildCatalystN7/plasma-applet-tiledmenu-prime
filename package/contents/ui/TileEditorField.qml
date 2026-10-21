@@ -8,7 +8,7 @@ TileEditorGroupBox {
 	Layout.fillWidth: true
 	property alias text: textField.text
 	property alias placeholderText: textField.placeholderText
-	property alias enabled: textField.enabled
+	property alias isFieldEnabled: textField.enabled
 	property string key: ''
 	property string checkedKey: ''
 	checkable: checkedKey
