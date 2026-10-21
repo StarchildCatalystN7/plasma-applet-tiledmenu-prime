@@ -136,9 +136,16 @@ ColumnLayout {
 		}
 	}
 
-	function open(tile) {
+	function open(tileIndex) {
 		resetView()
-		tileEditorView.tile = tile
+		if (typeof tileIndex !== "number" || tileIndex < 0 || tileIndex >= tileGrid.tileModel.length) {
+			return
+		}
+		// Resolve the REAL tileModel element here (same engine, same array that
+		// gets saved). Do NOT accept a tile object passed across the signal
+		// boundary: Qt >= 6.10 (Plasma 6.8) deep-copies it through QVariant and
+		// the editor would edit a clone that nothing ever persists.
+		tileEditorView.tile = tileGrid.tileModel[tileIndex]
 		show()
 	}
 

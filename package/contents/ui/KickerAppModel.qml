@@ -1,5 +1,6 @@
 import QtQuick
 import org.kde.plasma.private.kicker as Kicker
+import "Utils.js" as Utils
 
 Kicker.SimpleFavoritesModel {
 	// Kicker.FavoritesModel must be a child object of RootModel.
@@ -37,11 +38,17 @@ Kicker.SimpleFavoritesModel {
 	// DisabledRole           Qt.UserRole + 11        @since: Plasma 5.20
 	// IsMultilineTextRole    Qt.UserRole + 12        @since: Plasma 5.24
 	// DisplayWrappedRole     Qt.UserRole + 13        @since: Plasma 6.0
+	// Compare app ids ignoring the "applications:" prefix that Plasma 6.8 Kicker
+	// adds to favorite ids, so bare and prefixed ids both match.
+	function appIdsMatch(a, b) {
+		return Utils.normAppId(a) === Utils.normAppId(b)
+	}
+
 	function getApp(url) {
 		for (var i = 0; i < count; i++) {
 			var modelIndex = kickerAppModel.index(i, 0)
 			var favoriteId = kickerAppModel.data(modelIndex, Qt.UserRole + 3)
-			if (favoriteId == url) {
+			if (appIdsMatch(favoriteId, url)) {
 				var app = {}
 				app.indexInModel = i
 				app.favoriteId = favoriteId
@@ -63,7 +70,7 @@ Kicker.SimpleFavoritesModel {
 		for (var i = 0; i < count; i++) {
 			var modelIndex = kickerAppModel.index(i, 0)
 			var favoriteId = kickerAppModel.data(modelIndex, Qt.UserRole + 3)
-			if (favoriteId == url) {
+			if (appIdsMatch(favoriteId, url)) {
 				kickerAppModel.triggerIndex(i)
 				return
 			}

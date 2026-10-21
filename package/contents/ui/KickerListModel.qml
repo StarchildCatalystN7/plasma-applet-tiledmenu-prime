@@ -1,4 +1,5 @@
 import QtQuick
+import "Utils.js" as Utils
 
 ListModel {
 	id: listModel
@@ -155,7 +156,8 @@ ListModel {
 	function hasApp(favoriteId) {
 		for (var i = 0; i < count; i++) {
 			var item = get(i)
-			if (item.favoriteId == favoriteId) {
+			// Plasma 6.8 Kicker favorite ids carry an "applications:" prefix; normalize both sides.
+			if (Utils.normAppId(item.favoriteId) === Utils.normAppId(favoriteId)) {
 				return true
 			}
 		}

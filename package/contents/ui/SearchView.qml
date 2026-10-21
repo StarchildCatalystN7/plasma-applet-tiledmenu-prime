@@ -182,10 +182,10 @@ Item {
 			visible: false
 			active: false
 			// asynchronous: true
-			function open(tile) {
+			function open(tileIndex) {
 				config.showSearch = true
 				active = true
-				item.open(tile)
+				item.open(tileIndex)
 			}
 			readonly property bool isCurrentView: stackView.currentItem == tileEditorView
 			onIsCurrentViewChanged: {
