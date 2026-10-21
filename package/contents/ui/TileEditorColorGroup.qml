@@ -7,7 +7,7 @@ TileEditorGroupBox {
 	implicitWidth: parent.implicitWidth
 	Layout.fillWidth: true
 	property alias placeholderText: colorField.placeholderText
-	property alias enabled: colorField.enabled
+	property alias isGroupEnabled: colorField.enabled
 	property string key: ''
 
 	TileEditorColorField {
