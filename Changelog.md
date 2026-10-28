@@ -1,3 +1,7 @@
+## v1.0.4 - October 28 2026
+
+* Fix a TileItem context menu crash in Plasma 6.8 (original change by StarchildCatalystN7)
+
 ## v1.0.3 - October 21 2026
 
 * Added support for KDE 6.8. (All credit to StarchildCatalystN7, ReTin00 & WolfHeroEX)
