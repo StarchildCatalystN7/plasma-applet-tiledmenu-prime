@@ -105,7 +105,7 @@ Item {
 					appsModel.tileGridModel.runApp(appObj.tile.url)
 				}
 			} else if (mouse.button == Qt.RightButton) {
-				contextMenu.open(mouse.x, mouse.y)
+				appContextMenu.open(mouse.x, mouse.y)
 			}
 		}
 	}
@@ -139,7 +139,7 @@ Item {
 
 	QQC2.ToolTip {
 		id: control
-		visible: tileItemView.hovered && !(dragActive || contextMenu.opened) && appObj.tile.w == 1 && appObj.tile.h == 1
+		visible: tileItemView.hovered && !(dragActive || appContextMenu.opened) && appObj.tile.w == 1 && appObj.tile.h == 1
 		text: appObj.labelText
 		delay: 0
 		x: parent.width + rightPadding
@@ -163,16 +163,14 @@ Item {
 	}
 
 	AppContextMenu {
-		id: contextMenu
+		id: appContextMenu
+		visualParent: tileItem
 		tileIndex: index
-		onPopulateMenu: function(menu) {
-			if (!plasmoid.configuration.tilesLocked) {
-				menu.addPinToMenuAction(appObj.tile ? appObj.tile.url : '')
-			}
-
+		onPopulateMenu: {
 			appObj.addActionList(menu)
 
 			if (!plasmoid.configuration.tilesLocked) {
+				menu.addPinToMenuAction(appObj.tile ? appObj.tile.url : '')
 				if (appObj.isGroup) {
 					var menuItem = menu.newMenuItem()
 					menuItem.text = i18n("Sort Tiles")
