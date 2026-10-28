@@ -1,3 +1,7 @@
+## v1.0.3 - October 21 2026
+
+* Added support for KDE 6.8. (All credit to StarchildCatalystN7, ReTin00 & WolfHeroEX)
+
 ## v1.0.2 - June 15 2026
 
 * Add configuration control allow Tiles to use a smaller icon.
